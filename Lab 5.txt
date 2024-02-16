@@ -89,4 +89,4 @@ void GoNext(struct studentNode **now) {
 
 void DelNode(struct studentNode **now) {
   // 1. ตรวจสอบ
-  if (*now != NULL
+  if (*now != NULL);}
