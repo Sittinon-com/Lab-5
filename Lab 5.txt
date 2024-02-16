@@ -1,0 +1,92 @@
+#include <stdio.h>
+#include <string.h>
+
+#define MAX_NODES 10
+
+struct studentNode {
+  char name[20];
+  int age;
+  char sex;
+  float gpa;
+  struct studentNode *next;
+  struct studentNode *prev;
+};
+
+void ShowAll(struct studentNode **walk);
+
+int main() {
+  struct studentNode nodes[MAX_NODES];
+  struct studentNode *start = &nodes[0], **now = &start;
+  int next_node_index = 1;
+
+  InsNode(now, "one", 6, 'M', 3.11);
+  ShowAll(&start);
+
+  InsNode(now, "two", 8, 'F', 3.22);
+  ShowAll(&start);
+
+  GoNext(&now);
+
+  InsNode(now, "three", 10, 'M', 3.33);
+  ShowAll(&start);
+
+  InsNode(now, "four", 12, 'F', 3.44);
+  ShowAll(&start);
+
+  GoNext(&now);
+
+  DelNode(now);
+  ShowAll(&start);
+
+  return 0;
+}
+
+void ShowAll(struct studentNode **walk) {
+  while (*walk != NULL) {
+    printf("%s ", (*walk)->name);
+    walk = &(*walk)->next;
+  }
+  printf("\n");
+}
+
+void InsNode(struct studentNode **now, char *name, int age, char sex, float gpa) {
+  struct studentNode *newNode;
+
+  // 1. หาโหนดว่าง
+  while (*now != NULL && (*now)->next != NULL) {
+    *now = (*now)->next;
+  }
+
+  // 2. ตรวจสอบว่ามีโหนดว่าง
+  if (*now == NULL) {
+    return;
+  }
+
+  // 3. ตรวจสอบว่าเกิน limit หรือไม่
+  if (next_node_index >= MAX_NODES) {
+    return;
+  }
+
+  // 4. กำหนดข้อมูล
+  strcpy((*now)->name, name);
+  (*now)->age = age;
+  (*now)->sex = sex;
+  (*now)->gpa = gpa;
+
+  // 5. เชื่อมโยงโหนด
+  (*now)->next = &nodes[next_node_index++];
+  (*now)->next->prev = *now;
+  *now = (*now)->next;
+}
+
+void GoNext(struct studentNode **now) {
+  // 1. ตรวจสอบ
+  if (*now != NULL && (*now)->next != NULL) {
+    // 2. เลื่อน now
+    *now = (*now)->next;
+  }
+}
+
+void DelNode(struct studentNode **now) {
+  // 1. ตรวจสอบ
+  if (*now != NULL
